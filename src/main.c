@@ -1,10 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <pthread.h>
-#include <stdatomic.h>
 #include <string.h>
 #include "colors.h"
 #include "utils.h"
+#include "operations.h"
 
 //coloquei em variáveis para caso venha a 
 //mudar de ideia e trocar o nome das operações
