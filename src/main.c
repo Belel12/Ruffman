@@ -4,6 +4,7 @@
 #include <stdatomic.h>
 #include <string.h>
 #include "colors.h"
+#include "utils.h"
 
 //coloquei em variáveis para caso venha a 
 //mudar de ideia e trocar o nome das operações
@@ -23,34 +24,43 @@ const static char* help_message = (
 
 
 int validar_argumentos_entrada(const int argc, const char* argv[]){
-    if(argc == 2 && strcmp(argv[1],"help")){
-        puts(RED NEGRITO "ERRO" RESET);
-        printf(RED "Operação inválida: %s \n\n"RESET,argv[1]);
-        return 0;
-    }
-    if(argc < 3 || argc > 4){
+    if(argc < 2 || argc > 4){
         puts(NEGRITO RED "ERRO" RESET);
         printf(RED "Número de argumentos de entrada inválido: %d \n\n"RESET,argc);
         return 0;
     }
+    //permite o usuário digitar o comando de forma case insensitive
+    char* arg1 = to_lower(argv[1]);
+
     //strcmp retorna 0 se forem iguais
-    if(strcmp(argv[1],ZIP) && strcmp(argv[1],UNZIP)){
-        puts(RED NEGRITO "ERRO" RESET);
-        printf(RED "Operação inválida: %s \n\n"RESET,argv[1]);
-        return 0;
-    }
-    for(int i = 2;i<argc;i++){
-        if( !strcmp(argv[i],ZIP) || !strcmp(argv[i],UNZIP) ){
-            puts(RED NEGRITO "ERRO" RESET);
-            puts(RED "Path de entrada ou saída não pode ter o mesmo nome de umas das operações"RESET);
+
+    if(!strcmp(arg1,"help")){
+        if(argc > 2){
+            puts(RED "ERRO: Número de argumentos excessivo, esperado somente 'help'" RESET);
+            free(arg1);
             return 0;
         }
+        free(arg1);
+        return 1;
     }
-    return 1;
+    else if(!strcmp(arg1,ZIP) || !strcmp(arg1,UNZIP)){
+        if(argc == 2){
+            puts(RED "ERRO: Esperado caminho do arquivo de entrada como terceiro argumento" RESET);
+            free(arg1);
+            return 0;
+        }
+        free(arg1);
+        return 1;
+    }
+    else{
+        puts(RED "ERRO: COMANDO DESCONHECIDO: " RESET);
+        printf("%s\n",arg1);
+        free(arg1);
+        return 0;
+    }
 }
 
 int main(int argc, int argv){
     if(!validar_argumentos_entrada(argc,argv)){
-        puts()
     }
 }
