@@ -27,6 +27,10 @@ LoadingOpt* new_LoadingOptions(char* message, atomic_uchar* flag_concluido){
         return NULL;
     }
     LoadingOpt* newLO = (LoadingOpt*) malloc(sizeof(LoadingOpt));
+    if(newLO == NULL){
+        puts("ERRO AO CRIAR LoadingOpt");
+        return NULL;
+    }
     newLO->flag_concluido = flag_concluido;
     newLO->message= message;
     return newLO;
