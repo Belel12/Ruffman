@@ -3,7 +3,7 @@
 #include <string.h>
 #include "colors.h"
 #include "utils.h"
-#include "operations.h"
+//#include "operations.h"
 
 //coloquei em variáveis para caso venha a 
 //mudar de ideia e trocar o nome das operações
@@ -89,14 +89,20 @@ int main(int argc, char* argv){
         return_value = decode(arquivo_entrada,output_path);
     }
     fclose(arquivo_entrada);
-    FILE* validacao_saida = fopen(output_path,"r");
-    if(validacao_saida == NULL){
-        puts(
-            RED "ERRO: ARQUIVO DE SAÍDA NÃO FOI CRIADO, "
-            "VERIFIQUE SE O DIRETÓRIO EXISTE E QUE VOCÊ TENHA PERMISSÃO DE ESCRITA" RESET
-        );
+
+    if(return_value){
+        FILE* validacao_saida = fopen(output_path,"r");
+        if(validacao_saida == NULL){
+            puts(
+                RED "ERRO: ARQUIVO DE SAÍDA NÃO FOI CRIADO, "
+                "VERIFIQUE SE O DIRETÓRIO EXISTE E QUE VOCÊ TENHA PERMISSÃO DE ESCRITA" RESET
+            );
+        }
+        fclose(validacao_saida);
     }
-    fclose(validacao_saida);
+    else{
+        puts(RED "OCORREU UM ERRO DURANTE O PROCESSAMENTO DO ARQUIVO"RESET);
+    }
 
     return return_value;
 
