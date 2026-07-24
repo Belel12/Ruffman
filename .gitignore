@@ -1,4 +1,9 @@
+#binarios
 bin/*
+
+#ide
 .vscode/
+
+#arquivos de teste
 src/teste.c
-teste
+/teste
