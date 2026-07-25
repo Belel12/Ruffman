@@ -273,3 +273,33 @@ Ruff_Node* make_tree_from_heap(Ruff_Vector* heap){
     
 
 }
+
+//TODO: remover dps, coloquei so pra testar no teste.c
+size_t sizeofRuffNode(){
+    return sizeof(Ruff_Node);
+}
+
+void print_tree_preorder(Ruff_Node* raiz){
+    if(raiz == NULL){
+        return;
+    }
+
+    print_tree_preorder(raiz->esq);
+    if(raiz->is_folha){
+        printf("%c | freq: %lu\n",raiz->byte,raiz->frequencia);
+    }
+    print_tree_preorder(raiz->dir);
+
+}
+
+void print_heap(Ruff_Vector* heap){
+    if(heap == NULL || heap->qntd_nos == 0){
+        puts("HEAP VAZIO, NADA PARA IMPRIMIR");
+        return;
+    }
+
+    for(int i = 0; i < heap->qntd_nos; i++){
+        Ruff_Node* atual = heap->vetor_nos[i];
+        printf("pos %d:%c | freq: %lu\n",i,atual->byte,atual->frequencia);
+    }
+}
