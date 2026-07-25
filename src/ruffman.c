@@ -133,8 +133,8 @@ int append_node(Ruff_Vector* vetor, Ruff_Node* no){
 }
 
 int comparar_nosRuffman(const void* no1, const void* no2){
-    Ruff_Node* A = (Ruff_Node*) no1;
-    Ruff_Node* B = (Ruff_Node*) no2;
+    Ruff_Node* A = *(Ruff_Node**) no1;
+    Ruff_Node* B = *(Ruff_Node**) no2;
     if(A->frequencia == B->frequencia) return 0;
     return (A->frequencia < B->frequencia)? -1 : 1;
 }
