@@ -177,7 +177,12 @@ Ruff_Vector* string_to_heap(const char* string){
     unsigned long frequencias[quantidade_bytes_possiveis];
     //coloquei ulong pq vai que o arquivo e grande pra caramba
 
-    //primeiro conta a frequência de cada byte
+    //inicializa o vetor
+    for(int i = 0; i < quantidade_bytes_possiveis; i++){
+        frequencias[i] = 0;
+    }
+
+    //conta a frequência de cada byte
     for(unsigned long i = 0;i<strlen(string);i++){
         frequencias[string[i]]++;
     }
