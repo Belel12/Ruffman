@@ -7,3 +7,4 @@ bin/*
 #arquivos de teste
 src/teste.c
 /teste
+/teste.*
