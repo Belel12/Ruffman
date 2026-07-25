@@ -184,7 +184,7 @@ Ruff_Vector* string_to_heap(const char* string){
 
     //conta a frequência de cada byte
     for(unsigned long i = 0;i<strlen(string);i++){
-        frequencias[string[i]]++;
+        frequencias[(int)string[i]]++;
     }
 
     //para cada posição que n tiver frequência 0, cria um novo no e adiciona ao heap
