@@ -14,8 +14,6 @@ void free_ruffVector(Ruff_Vector* vetor);
 //retorna a raiz da árvore 
 Ruff_Node* make_tree_from_heap(Ruff_Vector* heap);
 
-size_t sizeofRuffNode();
-
 void print_tree_inorder(Ruff_Node* raiz);
 
 void print_heap(Ruff_Vector* heap);

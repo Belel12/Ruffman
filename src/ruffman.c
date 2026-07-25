@@ -278,11 +278,6 @@ Ruff_Node* make_tree_from_heap(Ruff_Vector* heap){
 
 }
 
-//TODO: remover dps, coloquei so pra testar no teste.c
-size_t sizeofRuffNode(){
-    return sizeof(Ruff_Node);
-}
-
 void print_tree_inorder(Ruff_Node* raiz){
     if(raiz == NULL){
         return;
