@@ -1,5 +1,4 @@
 #include "utils.h"
-#include <stdlib.h>
 #include <stdio.h>
 #include <ctype.h>
 #include <unistd.h>
@@ -59,4 +58,12 @@ void* tela_carregamento(void* load_options){
     }
     puts("\33[2K\r");
     return NULL;
+}
+
+//retorna o tamanho do arquivo em bytes
+size_t tamanho_arquivo(FILE* arquivo){
+    if(arquivo == NULL){
+        return 0;
+    }
+    return ftell(fseek(arquivo,0,SEEK_END));
 }
