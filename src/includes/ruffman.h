@@ -14,9 +14,15 @@ void free_ruffVector(Ruff_Vector* vetor);
 //retorna a raiz da árvore 
 Ruff_Node* make_tree_from_heap(Ruff_Vector* heap);
 
+//imprime cada no folha da arvore
 void print_tree_inorder(Ruff_Node* raiz);
 
+//imprime todos os nos do heap
 void print_heap(Ruff_Vector* heap);
+
+int serializar_arvore(FILE* arquivo,Ruff_Node* raiz);
+
+Ruff_Node* desserializar_arvore(FILE* arquivo);
 
 #define RUFFMAN_H
 #endif
