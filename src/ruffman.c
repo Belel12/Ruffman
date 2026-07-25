@@ -35,7 +35,7 @@ Ruff_Node* new_RuffNode_folha(char byte, unsigned long frequencia){
     return newNode;
 }
 
-Ruff_Node* new_RuffNode_interno(Ruff_Node* esq, Ruff_Node* dir){
+Ruff_Node* new_RuffNode_interno(Ruff_Node* esq, Ruff_Node* dir,unsigned long frequencia){
     Ruff_Node* newRN = (Ruff_Node*) malloc(sizeof(Ruff_Node));
     if(newRN == NULL){
         puts("ERRO AO CRIAR RUFF_NODE INTERNO");
@@ -44,6 +44,7 @@ Ruff_Node* new_RuffNode_interno(Ruff_Node* esq, Ruff_Node* dir){
 
     newRN->esq = esq;
     newRN->dir = dir;
+    newRN->frequencia = frequencia;
     newRN->is_folha = false;
     return newRN;
 }
@@ -240,7 +241,8 @@ Ruff_Node* make_tree_from_heap(Ruff_Vector* heap){
         return NULL;
     }
     if(heap->qntd_nos == 1){
-        Ruff_Node* raiz = new_RuffNode_interno(heap->vetor_nos[0],NULL);
+        Ruff_Node* no_unico = heap->vetor_nos[0];
+        Ruff_Node* raiz = new_RuffNode_interno(no_unico,NULL,no_unico->frequencia);
         return raiz;
     }
     //crio um novo heap para não alterar o original
@@ -252,7 +254,7 @@ Ruff_Node* make_tree_from_heap(Ruff_Vector* heap){
     while(heap_temp->qntd_nos > 1){
         Ruff_Node* no1 = heap_temp->vetor_nos[0];
         Ruff_Node* no2 = heap_temp->vetor_nos[1];
-        Ruff_Node* ligacao = new_RuffNode_interno(no1,no2);
+        Ruff_Node* ligacao = new_RuffNode_interno(no1,no2,no1->frequencia + no2->frequencia);
         
         heap_temp->vetor_nos[0] = ligacao;
         remove_node_from_heap(heap_temp,1);
