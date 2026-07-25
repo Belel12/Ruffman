@@ -279,16 +279,16 @@ size_t sizeofRuffNode(){
     return sizeof(Ruff_Node);
 }
 
-void print_tree_preorder(Ruff_Node* raiz){
+void print_tree_inorder(Ruff_Node* raiz){
     if(raiz == NULL){
         return;
     }
 
-    print_tree_preorder(raiz->esq);
+    print_tree_inorder(raiz->esq);
     if(raiz->is_folha){
         printf("%c | freq: %lu\n",raiz->byte,raiz->frequencia);
     }
-    print_tree_preorder(raiz->dir);
+    print_tree_inorder(raiz->dir);
 
 }
 

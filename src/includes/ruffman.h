@@ -16,7 +16,7 @@ Ruff_Node* make_tree_from_heap(Ruff_Vector* heap);
 
 size_t sizeofRuffNode();
 
-void print_tree_preorder(Ruff_Node* raiz);
+void print_tree_inorder(Ruff_Node* raiz);
 
 void print_heap(Ruff_Vector* heap);
 
