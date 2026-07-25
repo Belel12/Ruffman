@@ -42,6 +42,7 @@ Ruff_Node* new_RuffNode_interno(Ruff_Node* esq, Ruff_Node* dir,unsigned long fre
         return NULL;
     }
 
+    newRN->byte = '\0';
     newRN->esq = esq;
     newRN->dir = dir;
     newRN->frequencia = frequencia;
