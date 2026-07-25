@@ -2,7 +2,10 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <string.h>
+#include <ctype.h>
 #include "ruffman.h"
+
+#define CURRENT_SERIALIZER_VERSION 1
 
 struct ruffman_node {
     unsigned long frequencia;
@@ -303,4 +306,44 @@ void print_heap(Ruff_Vector* heap){
         Ruff_Node* atual = heap->vetor_nos[i];
         printf("pos %d:%c | freq: %lu\n",i,atual->byte,atual->frequencia);
     }
+}
+
+//serializa a arvore em pre-ordem utilizando recursão
+//cada nó serializado é uma string estilo csv contendo:
+//"folha?;byte;frequencia"
+int serializar_arvore(FILE* arquivo,Ruff_Node* raiz){
+    if(arquivo == NULL || raiz == NULL){
+        return 0;
+    }
+
+    fwrite(raiz,sizeof(Ruff_Node),1,arquivo);
+
+    serializar_arvore(arquivo,raiz->esq);
+
+    serializar_arvore(arquivo,raiz->dir);
+
+    return 1;
+
+}
+
+//desserializa a arvore
+//ja pressupoem que o ponteiro do arquivo esta na posicao da linha da arvore
+Ruff_Node* desserializar_arvore(FILE* arquivo){
+    if(arquivo == NULL){
+        puts("ERRO AO DESSERIALIZAR ARVORE: ARQUIVO NULL");
+        return NULL;
+    }
+
+    Ruff_Node* no = (Ruff_Node*) malloc(sizeof(Ruff_Node));
+    fread(no,sizeof(Ruff_Node),1,arquivo);
+
+    if(no->is_folha){
+        return no;
+    }
+    else{
+        no->esq = desserializar_arvore(arquivo);
+        no->dir = desserializar_arvore(arquivo);
+        return no;
+    }
+
 }
