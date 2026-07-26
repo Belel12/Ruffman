@@ -17,6 +17,8 @@ Ruff_Node* make_tree_from_heap(Ruff_Vector* heap);
 //imprime cada no folha da arvore
 void print_tree_inorder(Ruff_Node* raiz);
 
+void inspect_tree(Ruff_Node* raiz);
+
 //imprime todos os nos do heap
 void print_heap(Ruff_Vector* heap);
 
