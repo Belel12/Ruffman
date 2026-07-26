@@ -276,6 +276,25 @@ Ruff_Node* make_tree_from_heap(Ruff_Vector* heap){
 
 }
 
+//imprime uma versão detalhada de todos os nós da árvore no percurso em-ordem
+void inspect_tree(Ruff_Node* raiz){
+
+    if(raiz == NULL){
+        return;
+    }
+    inspect_tree(raiz->esq);
+    
+    printf("freq=%lu byte=%d folha=%d esq=%p dir=%p\n",
+       raiz->frequencia,
+       raiz->byte,
+       raiz->is_folha,
+       (void*)raiz->esq,
+       (void*)raiz->dir);
+    
+
+    inspect_tree(raiz->dir);
+}
+
 void print_tree_inorder(Ruff_Node* raiz){
     if(raiz == NULL){
         return;
