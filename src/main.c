@@ -70,7 +70,7 @@ int main(int argc, char* argv){
         puts(help_message);
         return 0;
     }
-    FILE* arquivo_entrada = fopen(argv[2],"r");
+    FILE* arquivo_entrada = fopen(argv[2],"rb");
     if(arquivo_entrada == NULL){
         free(operacao);
         puts(
