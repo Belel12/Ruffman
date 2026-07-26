@@ -347,7 +347,11 @@ Ruff_Node* desserializar_arvore(FILE* arquivo){
     }
 
     Ruff_Node* no = (Ruff_Node*) malloc(sizeof(Ruff_Node));
-    fread(no,sizeof(Ruff_Node),1,arquivo);
+
+    if(!fread(no,sizeof(Ruff_Node),1,arquivo)){
+        puts("ERRO AO LER ARQUIVO DURANTE DESSERIALIZAÇÃO");
+        return NULL;
+    }
 
     if(no->is_folha){
         return no;
