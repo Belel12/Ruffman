@@ -22,6 +22,7 @@ const static char* help_message = (
 );
 
 //retorna a string da operação a ser realizada
+//TODO: validar se caminho de entrada == caminho de saida
 char* validar_operacao_entrada(const int argc, const char* argv[]){
     if(argc < 2 || argc > 4){
         puts(NEGRITO RED "ERRO" RESET);
@@ -80,17 +81,17 @@ int main(int argc, char* argv){
     //caso o caminho de saída não seja especificado
     //o caminho padrão será o diretório atual
     char* output_path = (argc == 3) ? "./" : argv[3];
-    int return_value = 0;
+    int sucess = 0;
  
     if(!strcmp(operacao,ZIP)){
-        return_value = encode(arquivo_entrada,output_path);
+        sucess = encode(arquivo_entrada,output_path);
     }
     else{
-        return_value = decode(arquivo_entrada,output_path);
+        sucess = decode(arquivo_entrada,output_path);
     }
     fclose(arquivo_entrada);
 
-    if(return_value){
+    if(sucess){
         FILE* validacao_saida = fopen(output_path,"r");
         if(validacao_saida == NULL){
             puts(
@@ -104,6 +105,6 @@ int main(int argc, char* argv){
         puts(RED "OCORREU UM ERRO DURANTE O PROCESSAMENTO DO ARQUIVO"RESET);
     }
 
-    return return_value;
+    return sucess;
 
 }
