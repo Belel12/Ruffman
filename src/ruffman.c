@@ -357,8 +357,9 @@ Ruff_Node* desserializar_arvore(FILE* arquivo){
         return no;
     }
     else{
-        no->esq = desserializar_arvore(arquivo);
-        no->dir = desserializar_arvore(arquivo);
+        //so tenta ler se o no possuia um filho antes
+        if(no->esq != NULL) no->esq = desserializar_arvore(arquivo);
+        if(no->dir != NULL) no->dir = desserializar_arvore(arquivo);
         return no;
     }
 
