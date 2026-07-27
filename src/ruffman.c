@@ -11,7 +11,7 @@ struct ruffman_node {
     unsigned long frequencia;
     struct ruffman_node* esq;
     struct ruffman_node* dir;
-    char byte;
+    unsigned char byte;
     bool is_folha;
 };
 
