@@ -68,12 +68,15 @@ void* tela_carregamento(void* load_options){
 }
 
 //retorna o tamanho do arquivo em bytes
-size_t tamanho_arquivo(FILE* arquivo){
+long tamanho_arquivo(FILE* arquivo){
     if(!arquivo){
         return 0;
     }
+    long current = ftell(arquivo);
     fseek(arquivo,0,SEEK_END);
-    return ftell(arquivo);
+    long tamanho = ftell(arquivo);
+    fseek(arquivo,current,SEEK_SET);
+    return tamanho;
 }
 
 //retorna 1 caso o arquivo exista
