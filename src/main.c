@@ -75,26 +75,36 @@ int main(int argc, char* argv){
         puts(help_message);
         return 0;
     }
-    FILE* arquivo_entrada = fopen(argv[2],"rb");
-    if(arquivo_entrada == NULL){
+
+    char* input_path = argv[2];
+    //valida existência do arquivo de entrada
+    if(!arquivo_existe(input_path)){
         free(operacao);
         puts(
             RED "ERRO: ARQUIVO NÃO ENCONTRADO, "
             "VERIFIQUE SE O ARQUIVO EXISTE OU SE O CAMINHO ESTÁ CORRETO"RESET);
         return 1;
     }
+
     //caso o caminho de saída não seja especificado
     //o caminho padrão será o diretório atual
     char* output_path = (argc == 3) ? "./" : argv[3];
+
+    //valida se existe um arquivo no path de saída dado
+    if(arquivo_existe(output_path)){
+        puts(RED "ERRO: CAMINHO DE SAÍDA NÃO É UM DIRETÓRIO");
+        free(operacao);
+        return 1;
+    }
+
     int sucess = 0;
  
     if(!strcmp(operacao,ZIP)){
-        sucess = encode(arquivo_entrada,output_path);
+        sucess = encode(input_path,output_path);
     }
     else{
-        sucess = decode(arquivo_entrada,output_path);
+        sucess = decode(input_path,output_path);
     }
-    fclose(arquivo_entrada);
 
     if(sucess){
         FILE* validacao_saida = fopen(output_path,"r");
@@ -110,6 +120,6 @@ int main(int argc, char* argv){
         puts(RED "OCORREU UM ERRO DURANTE O PROCESSAMENTO DO ARQUIVO"RESET);
     }
 
-    return sucess;
+    return !sucess;
 
 }
