@@ -93,3 +93,65 @@ char* get_file_name(char* path){
     char* nome_isolado = strrchr(path,'/');
     return (nome_isolado)? nome_isolado+1 : path;
 }
+
+//retorna uma nova string alocada com o nome do arquivo com a extensão alterada
+//a extensão deve ser inserida sem o '.' antes
+char* change_file_extension(char* file_name, char* new_extension){
+    if(! file_name){
+        return NULL;
+    }
+    char* novo_nome = (char*) calloc(
+        (strlen(file_name)+strlen(new_extension)+1) , sizeof(char)
+    );
+    strcpy(novo_nome,file_name);
+    char* extensao = strrchr(novo_nome,'.');
+    if(extensao){
+        if(new_extension){
+            extensao++;
+            strcpy(extensao,new_extension);
+        }
+        else{
+            *extensao = '\0';
+        }
+    }
+    else{
+        if(new_extension){
+            strcpy(&novo_nome[strlen(novo_nome)],new_extension);
+        }
+    }
+
+    return novo_nome;
+    
+}
+
+//retorna o separador de diretório usado pelo sistema operacional do usuário
+char get_os_path_separator(){
+    #if defined(__WIN32) || defined(__WIN64)
+        return '\\';
+    #else
+        return '/';
+    #endif
+}
+
+//concatena a string do nome do arquivo à string do path
+char* join_file_to_path(char* file_name, char* path){
+    if(!file_name || !path){
+        return NULL;
+    }
+
+    char* joined_string = (char*) malloc(
+        (strlen(file_name)+strlen(path)+1) * sizeof(char)
+    );
+
+    char* last_character = &path[strlen(path)-1];
+    if(*last_character == get_os_path_separator()){
+        last_character++;
+        strcpy(last_character,file_name);
+    }
+    else{
+        char separador = get_os_path_separator();
+        *(++last_character) = separador;
+        strcpy(++last_character,file_name);
+    }
+    return joined_string;
+}
