@@ -3,6 +3,7 @@
 #include <stdbool.h>
 #include <string.h>
 #include <ctype.h>
+#include <math.h>
 #include "ruffman.h"
 
 
@@ -19,6 +20,11 @@ struct ruffman_vector {
     struct ruffman_node** vetor_nos;
     int tamanho;
     int qntd_nos;
+
+struct bytes_compactados{
+    unsigned int n_bits;
+    char* bytes;
+};
 };
 
 //Cria um novo nó com frequência 1
@@ -363,4 +369,148 @@ Ruff_Node* desserializar_arvore(FILE* arquivo){
         return no;
     }
 
+}
+
+BytesCompactados* new_BytesCompactados(){
+    BytesCompactados* newBC = (BytesCompactados*) malloc(sizeof(BytesCompactados));
+    if(!newBC) return NULL;
+
+    newBC->n_bits = 0;
+    newBC->bytes = NULL;
+}
+
+void free_BytesCompactados(BytesCompactados* ptr){
+    if(!ptr) return;
+    free(ptr->bytes);
+    free(ptr);
+}
+
+/*pega o caminho percorrido da raíz até o nó e transforma em 
+bytes*/
+BytesCompactados* tree_path_to_binary(char* tree_path){
+    if(!tree_path) return NULL;
+
+    BytesCompactados* bc = new_BytesCompactados();
+    size_t tamanho_string = strlen(tree_path);
+    int tamanho_vetor = (int) ceil((double)(tamanho_string/(sizeof(char)*8)));
+
+    char* bytes = (char*) calloc(tamanho_vetor,sizeof(char));
+    if(!bytes) return NULL;
+
+    bc->bytes = bytes;
+
+    char* temp = bytes-1;
+
+    for(int i = 0; i < tamanho_string; i++,bc->n_bits++){
+        if(i % 8 == 0) temp++;
+
+        *temp <<= 1;
+
+        if(tree_path[i] == '0')
+            *temp |= 0b00000000;
+        else if(tree_path[i] == '1')
+            *temp |= 0b00000001;
+        else{
+            free(bytes);
+            return NULL;
+        }
+    }
+
+    return bc;
+    
+}
+
+/*organiza um vetor do tipo BytesCompactados [256] onde 
+cada posicao corresponde a um byte possivel, e o ponteiro
+dessa posicao aponta para o caminho dele na árvore já 
+compactado em binario. O terceiro argumento serve
+apenas para a chamada recursiva interna, passe NULL*/
+void tree_to_binary(Ruff_Node* root, BytesCompactados* array[],char* path_atual){
+    if(
+        !root 
+        || !array 
+        || sizeof(array) / sizeof(BytesCompactados*) < 256
+    ){
+        free(path_atual);
+        return;
+    }
+    if(root->is_folha){
+        if(!path_atual) return;
+
+        array[root->byte] = tree_path_to_binary(path_atual);
+        free(path_atual);
+        return;
+    }
+    else{
+        //contabiliza o espaço pro \0 e pro novo caractere
+        unsigned int novo_tamanho = (path_atual) ? strlen(path_atual) + 2 : 2;
+        if(root->esq != NULL){
+            char* path_esquerda = (char*) calloc(novo_tamanho,1);
+            if(path_atual)
+                strcpy(path_esquerda,path_atual);
+            strcpy(strrchr(path_esquerda,'\0'),"0");
+            tree_to_binary(root->esq,array,path_esquerda);
+        }
+        if(root->dir != NULL){
+            char* path_direita = (char*) calloc(novo_tamanho,1);
+            if(path_atual)
+                strcpy(path_direita,path_atual);
+            strcpy(strrchr(path_direita,'\0'),"1");
+            tree_to_binary(root->esq,array,path_direita);
+        }
+        //libera o caminho intermediario
+        free(path_atual);
+        return;
+    }
+    
+}
+
+/*para cada caractere recebido em file_data,
+essa função escreve os bits que representam
+o caminho da raiz da árvore até o byte correspondente*/
+int write_compacted_data(
+    BytesCompactados* bytes[], 
+    char* file_data, 
+    FILE* output_file
+){
+    if(!bytes || !file_data || !output_file) return 0;
+
+    int bits_written_buffer = 0;
+    char buffer = '\0';
+    unsigned char bits_filter[] = {
+        0b10000000,
+        0b01000000,
+        0b00100000,
+        0b00010000,
+        0b00001000,
+        0b00000100,
+        0b00000010,
+        0b00000001
+    };
+
+    for(unsigned long i = 0; i < strlen(file_data);i++){
+        
+
+        BytesCompactados* byte = bytes[(unsigned char)file_data[i]];
+        if(!byte) return 0;
+
+        char* bits_ptr = byte->bytes;
+        int bits_written_ptr = 0;
+        for(int j = 0; j < byte->n_bits; j++){
+            buffer <<= 1;
+            buffer |= (*bits_ptr | bits_filter[j % 8]);
+            bits_written_buffer++;
+            bits_written_ptr++;
+            if(bits_written_buffer == 8){
+                fwrite(&buffer,sizeof(char),1,output_file);
+                bits_written_buffer = 0;
+                buffer = '\0';
+            }
+            if(bits_written_ptr == 8){
+                bits_ptr++;
+                bits_written_ptr = 0;
+            }
+        }
+    }
+    return 1;
 }

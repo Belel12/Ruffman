@@ -4,6 +4,7 @@
 
 typedef struct ruffman_node Ruff_Node;
 typedef struct ruffman_vector Ruff_Vector;
+typedef struct bytes_compactados BytesCompactados;
 
 //A função já retorna o vetor heapfyzado, heapzado, heapado, hypado, sla
 Ruff_Vector* string_to_heap(const char* string);
@@ -27,6 +28,18 @@ void print_heap(Ruff_Vector* heap);
 int serializar_arvore(FILE* arquivo,Ruff_Node* raiz);
 
 Ruff_Node* desserializar_arvore(FILE* arquivo);
+
+void tree_to_binary(Ruff_Node* root, BytesCompactados* array[],char* path_atual);
+
+void free_BytesCompactados(BytesCompactados* ptr);
+
+void tree_to_binary(Ruff_Node* root, BytesCompactados* array[],char* path_atual);
+
+int write_compacted_data(
+    BytesCompactados* bytes[], 
+    char* file_data, 
+    FILE* output_file
+);
 
 #define RUFFMAN_H
 #endif
