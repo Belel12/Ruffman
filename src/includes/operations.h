@@ -2,8 +2,8 @@
 
 #include <stdio.h>
 
-int encode(FILE* inputfile, char* outputpath);
-int decode(FILE* inputfile, char* outputpath);
+int encode(char* inputpath, char* outputpath);
+int decode(char* inputpath, char* outputpath);
 
 #define OPERATIONS_H
 #endif
