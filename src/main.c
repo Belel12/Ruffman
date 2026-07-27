@@ -48,6 +48,11 @@ char* validar_operacao_entrada(const int argc, const char* argv[]){
             free(arg1);
             return NULL;
         }
+        if(argc == 4 && !strcmp(argv[2],argv[3])){
+            puts(RED "ERRO: CAMINHO DE ENTRADA NÃO PODE SER IDÊNTICO AO CAMINHO DE SAÍDA");
+            free(arg1);
+            return NULL;
+        }
         return arg1;
     }
     else{
