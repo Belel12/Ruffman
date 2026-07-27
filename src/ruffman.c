@@ -20,11 +20,11 @@ struct ruffman_vector {
     struct ruffman_node** vetor_nos;
     int tamanho;
     int qntd_nos;
+};
 
 struct bytes_compactados{
     unsigned int n_bits;
     char* bytes;
-};
 };
 
 //Cria um novo nó com frequência 1
@@ -42,7 +42,11 @@ Ruff_Node* new_RuffNode_folha(char byte, unsigned long frequencia){
     return newNode;
 }
 
-Ruff_Node* new_RuffNode_interno(Ruff_Node* esq, Ruff_Node* dir,unsigned long frequencia){
+Ruff_Node* new_RuffNode_interno(
+    Ruff_Node* esq, 
+    Ruff_Node* dir,
+    unsigned long frequencia
+){
     Ruff_Node* newRN = (Ruff_Node*) malloc(sizeof(Ruff_Node));
     if(newRN == NULL){
         puts("ERRO AO CRIAR RUFF_NODE INTERNO");
@@ -126,7 +130,9 @@ int append_node(Ruff_Vector* vetor, Ruff_Node* no){
         else{
             //dobra o tamanho do vetor dinamicamente, pique C++...acho
             unsigned int novo_tamanho = 2 * vetor->tamanho;
-            Ruff_Node** tmp = realloc(vetor->vetor_nos,novo_tamanho * sizeof(Ruff_Node*));
+            Ruff_Node** tmp = realloc(
+                vetor->vetor_nos,novo_tamanho * sizeof(Ruff_Node*)
+            );
             if(tmp == NULL){
                 puts("ERRO AO AUMENTAR TAMANHO DO VETOR");
                 return 0;
@@ -195,12 +201,16 @@ Ruff_Vector* string_to_heap(const char* string){
         frequencias[(int)string[i]]++;
     }
 
-    //para cada posição que n tiver frequência 0, cria um novo no e adiciona ao heap
+    //para cada posição que n tiver frequência 0, 
+    //cria um novo no e adiciona ao heap
     for(int i = 0; i < quantidade_bytes_possiveis; i++){
         if(frequencias[i] != 0){
             Ruff_Node* no = new_RuffNode_folha(i,frequencias[i]);
             if(no == NULL){
-                printf("ERRO AO ADICIONAR NO DO BYTE %c DURANTE PARSING, ENCERRANDO OPERACAO\n",i);
+                printf(
+                    "ERRO AO ADICIONAR NO DO BYTE %c DURANTE PARSING, "
+                    "ENCERRANDO OPERACAO\n",i
+                );
                 destroy_RuffVector(vetor);
                 return NULL;
             }
@@ -267,7 +277,9 @@ Ruff_Node* make_tree_from_heap(Ruff_Vector* heap){
     while(heap_temp->qntd_nos > 1){
         Ruff_Node* no1 = heap_temp->vetor_nos[0];
         Ruff_Node* no2 = heap_temp->vetor_nos[1];
-        Ruff_Node* ligacao = new_RuffNode_interno(no1,no2,no1->frequencia + no2->frequencia);
+        Ruff_Node* ligacao = new_RuffNode_interno(
+            no1,no2,no1->frequencia + no2->frequencia
+        );
         
         heap_temp->vetor_nos[0] = ligacao;
         remove_node_from_heap(heap_temp,1);
