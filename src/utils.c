@@ -1,5 +1,5 @@
 #include "utils.h"
-#include <stdio.h>
+
 #include <ctype.h>
 #include <unistd.h>
 #include <string.h>
@@ -9,7 +9,7 @@ char* to_lower(const char* string){
         return NULL;
     }
     char* new_string = calloc(strlen(string)+1,sizeof(char));
-    for(int i = 0; i < strlen(string); i++){
+    for(size_t i = 0; i < strlen(string); i++){
         new_string[i] = tolower(string[i]);
     }
     return new_string; 
@@ -62,8 +62,24 @@ void* tela_carregamento(void* load_options){
 
 //retorna o tamanho do arquivo em bytes
 size_t tamanho_arquivo(FILE* arquivo){
-    if(arquivo == NULL){
+    if(!arquivo){
         return 0;
     }
-    return ftell(fseek(arquivo,0,SEEK_END));
+    fseek(arquivo,0,SEEK_END);
+    return ftell(arquivo);
+}
+
+//retorna 1 caso o arquivo exista
+int arquivo_existe(const char* path){
+    FILE* f = fopen(path,"r");
+    int existe = (f == NULL)? 0 : 1;
+    fclose(f);
+    return existe;
+}
+
+//retorna um ponteiro para o nome do arquivo, ignorando diretorios do path
+char* get_file_name(char* path){
+    if(!path) return NULL;
+    char* nome_isolado = strrchr(path,'/');
+    return (nome_isolado)? nome_isolado+1 : path;
 }
