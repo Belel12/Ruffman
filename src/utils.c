@@ -34,6 +34,13 @@ LoadingOpt* new_LoadingOptions(char* message, atomic_uchar* flag_concluido){
     newLO->message= message;
     return newLO;
 }
+
+void free_LoadingOpt(LoadingOpt* ptr){
+    if(!ptr) return;
+    free(ptr->message);
+    free(ptr);
+}
+
 void* tela_carregamento(void* load_options){
     if(load_options == NULL){
         puts("Erro ao iniciar tela de carregamento: Null load_options");
