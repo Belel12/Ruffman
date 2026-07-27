@@ -3,7 +3,7 @@
 #include <string.h>
 #include "colors.h"
 #include "utils.h"
-//#include "operations.h"
+#include "operations.h"
 
 //coloquei em variáveis para caso venha a 
 //mudar de ideia e trocar o nome das operações
