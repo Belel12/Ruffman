@@ -5,7 +5,7 @@
 #include <ctype.h>
 #include "ruffman.h"
 
-#define CURRENT_SERIALIZER_VERSION 1
+
 
 struct ruffman_node {
     unsigned long frequencia;

@@ -1,5 +1,7 @@
 #ifndef RUFFMAN_H
 
+#define CURRENT_SERIALIZER_VERSION 1
+
 typedef struct ruffman_node Ruff_Node;
 typedef struct ruffman_vector Ruff_Vector;
 
