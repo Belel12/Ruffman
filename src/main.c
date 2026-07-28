@@ -11,7 +11,7 @@
 #define ZIP "zip"
 #define UNZIP "unzip"
 
-const static char* help_message = (
+static const char* help_message = (
     RED "===HUFFMAN===" RESET
     YELLOW "\n\n* A sintaxe básica do comando para se usar este programa é:\n" RESET
     NEGRITO "ruffman [" ZIP " || " UNZIP "] [path de entrada] [path de saída]\n" RESET
@@ -23,7 +23,7 @@ const static char* help_message = (
 
 //retorna a string da operação a ser realizada
 //TODO: validar se caminho de entrada == caminho de saida
-char* validar_operacao_entrada(const int argc, const char* argv[]){
+char* validar_operacao_entrada(const int argc,char* argv[]){
     if(argc < 2 || argc > 4){
         puts(NEGRITO RED "ERRO" RESET);
         printf(RED "Número de argumentos de entrada inválido: %d \n\n"RESET,argc);
@@ -63,7 +63,7 @@ char* validar_operacao_entrada(const int argc, const char* argv[]){
     }
 }
 
-int main(int argc, char* argv){
+int main(int argc, char* argv[]){
     char* operacao = validar_operacao_entrada(argc,argv);
     if (operacao == NULL){
         printf("\nUse 'ruffman help' para verificar o uso do programa\n");
