@@ -41,5 +41,9 @@ int write_compacted_data(
     FILE* output_file
 );
 
+int uncompact_data(Ruff_Node* root, char* file_data, FILE* output_file);
+
+void free_RuffTree(Ruff_Node* root);
+
 #define RUFFMAN_H
 #endif

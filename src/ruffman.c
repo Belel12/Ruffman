@@ -530,3 +530,49 @@ int write_compacted_data(
     }
     return 1;
 }
+
+int uncompact_data(Ruff_Node* root, char* file_data, FILE* output_file){
+    if(!root || !file_data) return 0;
+
+    Ruff_Node* tmp = root;
+    unsigned char bits_filter[] = {
+        0b10000000,
+        0b01000000,
+        0b00100000,
+        0b00010000,
+        0b00001000,
+        0b00000100,
+        0b00000010,
+        0b00000001
+    };
+
+    for(unsigned long i = 0; i < strlen(file_data);i++){
+        unsigned char byte_atual = file_data[i];
+
+        for(int bits_lidos = 0; bits_lidos < 8; bits_lidos++){
+            int caminho = (byte_atual & bits_filter[bits_lidos]) >> 7-bits_lidos; //0b10000000
+
+            tmp = (caminho) ? tmp->dir : tmp->esq;
+
+            if(tmp == NULL){
+                puts("ERRO: TMP NULL");
+                return 0;
+            }
+            
+            if(tmp->is_folha){
+                fwrite(&(tmp->byte),1,1,output_file);
+                tmp = root;
+            }
+        }
+    }
+    return 1;
+}
+
+
+void free_RuffTree(Ruff_Node* root){
+    if(!root) return;
+
+    free_RuffTree(root->esq);
+    free_RuffTree(root->dir);
+    free(root);
+}
