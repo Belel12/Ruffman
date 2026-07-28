@@ -4,6 +4,7 @@
 #include <unistd.h>
 #include <string.h>
 
+//retorna uma nova string em lower_case
 char* to_lower(const char* string){
     if(string == NULL){
         return NULL;
@@ -77,6 +78,16 @@ long tamanho_arquivo(FILE* arquivo){
     long tamanho = ftell(arquivo);
     fseek(arquivo,current,SEEK_SET);
     return tamanho;
+}
+
+//retorna quantos bytes ainda tem até o fim do arquivo
+long bytes_til_EOF(FILE* file){
+    if(!file) return 0;
+    long pos_atual = ftell(file);
+    fseek(file,0,SEEK_END);
+    long restante = ftell(file) - pos_atual;
+    fseek(file,pos_atual,SEEK_SET);
+    return restante;
 }
 
 //retorna 1 caso o arquivo exista

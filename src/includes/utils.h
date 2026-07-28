@@ -26,5 +26,7 @@ char* join_file_to_path(char* file_name, char* path);
 
 char get_os_path_separator();
 
+long bytes_til_EOF(FILE* file);
+
 #define UTILS_H
 #endif
