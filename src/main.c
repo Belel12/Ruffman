@@ -107,14 +107,12 @@ int main(int argc, char* argv[]){
     }
 
     if(sucess){
-        FILE* validacao_saida = fopen(output_path,"r");
-        if(validacao_saida == NULL){
+        if(!arquivo_existe(output_path)){
             puts(
                 RED "ERRO: ARQUIVO DE SAÍDA NÃO FOI CRIADO, "
                 "VERIFIQUE SE O DIRETÓRIO EXISTE E QUE VOCÊ TENHA PERMISSÃO DE ESCRITA" RESET
             );
         }
-        fclose(validacao_saida);
     }
     else{
         puts(RED "OCORREU UM ERRO DURANTE O PROCESSAMENTO DO ARQUIVO"RESET);
