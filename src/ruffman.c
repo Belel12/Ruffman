@@ -389,6 +389,8 @@ BytesCompactados* new_BytesCompactados(){
 
     newBC->n_bits = 0;
     newBC->bytes = NULL;
+
+    return newBC;
 }
 
 void free_BytesCompactados(BytesCompactados* ptr){
@@ -413,7 +415,7 @@ BytesCompactados* tree_path_to_binary(char* tree_path){
 
     char* temp = bytes-1;
 
-    for(int i = 0; i < tamanho_string; i++,bc->n_bits++){
+    for(size_t i = 0; i < tamanho_string; i++,bc->n_bits++){
         if(i % 8 == 0) temp++;
 
         *temp <<= 1;
@@ -436,12 +438,13 @@ BytesCompactados* tree_path_to_binary(char* tree_path){
 cada posicao corresponde a um byte possivel, e o ponteiro
 dessa posicao aponta para o caminho dele na árvore já 
 compactado em binario. O terceiro argumento serve
-apenas para a chamada recursiva interna, passe NULL*/
+apenas para a chamada recursiva interna, passe NULL.
+A função também exige que o array tenha exatamente 256
+posições, ou seja, 256 BytesCompactados* */
 void tree_to_binary(Ruff_Node* root, BytesCompactados* array[],char* path_atual){
     if(
         !root 
         || !array 
-        || sizeof(array) / sizeof(BytesCompactados*) < 256
     ){
         free(path_atual);
         return;
@@ -508,9 +511,10 @@ int write_compacted_data(
 
         char* bits_ptr = byte->bytes;
         int bits_written_ptr = 0;
-        for(int j = 0; j < byte->n_bits; j++){
+        for(unsigned int j = 0; j < byte->n_bits; j++){
+            //TODO: consertar isso aqui, ta gravando os bits de forma erronea
             buffer <<= 1;
-            buffer |= (*bits_ptr | bits_filter[j % 8]);
+            buffer |= (*bits_ptr & bits_filter[bits_written_ptr] >> 7-bits_written_ptr);
             bits_written_buffer++;
             bits_written_ptr++;
             if(bits_written_buffer == 8){
