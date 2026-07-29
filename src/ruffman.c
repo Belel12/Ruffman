@@ -514,7 +514,7 @@ int write_compacted_data(
         for(unsigned int j = 0; j < byte->n_bits; j++){
             //TODO: consertar isso aqui, ta gravando os bits de forma erronea
             buffer <<= 1;
-            buffer |= (*bits_ptr & bits_filter[bits_written_ptr] >> 7-bits_written_ptr);
+            buffer |= ((*bits_ptr & bits_filter[bits_written_ptr]) >> (7-bits_written_ptr));
             bits_written_buffer++;
             bits_written_ptr++;
             if(bits_written_buffer == 8){
@@ -550,7 +550,7 @@ int uncompact_data(Ruff_Node* root, char* file_data, FILE* output_file){
         unsigned char byte_atual = file_data[i];
 
         for(int bits_lidos = 0; bits_lidos < 8; bits_lidos++){
-            int caminho = (byte_atual & bits_filter[bits_lidos]) >> 7-bits_lidos; //0b10000000
+            int caminho = (byte_atual & bits_filter[bits_lidos]) >> (7-bits_lidos); //0b10000000
 
             tmp = (caminho) ? tmp->dir : tmp->esq;
 

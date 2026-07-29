@@ -80,7 +80,7 @@ int __decode(char* inputpath, char* outputpath){
     char buffer[1024];
 
     while(fgets(buffer,sizeof(buffer),input_file) != NULL){
-        if(buffer[0]=="#") continue;
+        if(buffer[0]=='#') continue;
 
         char* chave = strtok(buffer,":");
         char* valor = strtok(NULL,"\n");
