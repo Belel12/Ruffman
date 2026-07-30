@@ -3,6 +3,7 @@
 #include <ctype.h>
 #include <unistd.h>
 #include <string.h>
+#include <sys/stat.h>
 
 //retorna uma nova string em lower_case
 char* to_lower(const char* string){
@@ -168,4 +169,28 @@ char* join_file_to_path(char* file_name, char* path){
         strcpy(++last_character,file_name);
     }
     return joined_string;
+}
+
+int is_directory(char* path){
+    if(!path) return 0;
+
+    #if defined(_WIN32) || defined(_WIN64)
+        #define STAT _stat
+        #define STAT_STRUCT struct _stat
+    #else
+        #define STAT stat
+        #define STAT_STRUCT struct stat
+    #endif
+
+    STAT_STRUCT st;
+
+    if (STAT(path, &st) != 0) {
+        return 0;
+    }
+
+    #if defined(_WIN32) || defined(_WIN64)
+        return (st.st_mode & _S_IFDIR) != 0;
+    #else
+        return S_ISDIR(st.st_mode);
+    #endif
 }

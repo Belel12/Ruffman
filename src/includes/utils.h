@@ -28,5 +28,7 @@ char get_os_path_separator();
 
 long bytes_til_EOF(FILE* file);
 
+int is_directory(char* path);
+
 #define UTILS_H
 #endif
