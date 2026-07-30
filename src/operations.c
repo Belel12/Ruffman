@@ -23,7 +23,7 @@ void generate_meta_data(FILE* file, char* original_file_name, long original_file
     fprintf(file,meta_string,original_file_name,CURRENT_SERIALIZER_VERSION,original_file_size);
 }
 
-int __encode(char* inputpath, char* outputpath){
+int encode(char* inputpath, char* outputpath){
     FILE* input_file = fopen(inputpath,"rb");
     char* file_name = get_file_name(inputpath);
     char* nome_arquivo_compactado = change_file_extension(file_name,"ruff");
@@ -79,7 +79,7 @@ int __encode(char* inputpath, char* outputpath){
     
 }
 
-int __decode(char* inputpath, char* outputpath){
+int decode(char* inputpath, char* outputpath){
     FILE* input_file = fopen(inputpath,"rb"); if(!input_file) return 0;
     FILE* output_file = NULL;
     char* original_file_name = NULL;
@@ -160,29 +160,3 @@ int __decode(char* inputpath, char* outputpath){
     return sucess;
 }
 
-/*Essas funções encapsulam as funções de compactação/descompactação
-com a tela de carregamento*/
-
-int encode(char* inputpath, char* outputpath){
-    atomic_uchar flag_concluido;
-    atomic_store(&flag_concluido,0);
-    pthread_t thread_carregamento;
-    LoadingOpt* lopt = new_LoadingOptions("COMPACTANDO ARQUIVO",&flag_concluido);
-    pthread_create(&thread_carregamento,NULL,tela_carregamento,(void*) lopt);
-    int sucess = __encode(inputpath,outputpath);
-    atomic_store(&flag_concluido,1);
-    pthread_join(thread_carregamento,NULL);
-    return sucess;
-}
-
-int decode(char* inputpath, char* outputpath){
-    atomic_uchar flag_concluido;
-    atomic_store(&flag_concluido,0);
-    pthread_t thread_carregamento;
-    LoadingOpt* lopt = new_LoadingOptions("DESCOMPACTANDO ARQUIVO ARQUIVO",&flag_concluido);
-    pthread_create(&thread_carregamento,NULL,tela_carregamento,(void*) lopt);
-    int sucess = __decode(inputpath,outputpath);
-    atomic_store(&flag_concluido,1);
-    pthread_join(thread_carregamento,NULL);
-    return sucess;
-}

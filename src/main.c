@@ -85,7 +85,6 @@ int main(int argc, char* argv[]){
             "VERIFIQUE SE O ARQUIVO EXISTE OU SE O CAMINHO ESTÁ CORRETO"RESET);
         return 1;
     }
-
     //caso o caminho de saída não seja especificado
     //o caminho padrão será o diretório atual
     char* output_path = (argc == 3) ? "./" : argv[3];
@@ -112,6 +111,9 @@ int main(int argc, char* argv[]){
                 RED "ERRO: ARQUIVO DE SAÍDA NÃO FOI CRIADO, "
                 "VERIFIQUE SE O DIRETÓRIO EXISTE E QUE VOCÊ TENHA PERMISSÃO DE ESCRITA" RESET
             );
+        }
+        else{
+            
         }
     }
     else{
