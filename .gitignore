@@ -9,3 +9,6 @@ src/teste.c
 /teste
 /teste.*
 testes/
+
+#arquivo de desinstalação
+uninstall_linux.sh
