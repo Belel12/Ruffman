@@ -96,7 +96,8 @@ int arquivo_existe(const char* path){
     if(!path) return 0;
     FILE* f = fopen(path,"r");
     int existe = (f == NULL)? 0 : 1;
-    fclose(f);
+    if(existe)
+        fclose(f);
     return existe;
 }
 
