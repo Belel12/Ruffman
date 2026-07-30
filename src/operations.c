@@ -63,7 +63,10 @@ int __encode(char* inputpath, char* outputpath){
     if(!write_compacted_data(bytes_compactados,bytes_arquivo,output_file,tamanho_arq)){
         return 0;
     }
-        
+      
+    double reducao = (1.0 - (double)tamanho_arquivo(output_file) / tamanho_arquivo(input_file)) * 100.0;
+    printf("TAXA DE COMPACTAÇÃO: %.2f %%\n",reducao);
+
     fclose(input_file);
     fclose(output_file);
     destroy_RuffVector(heap);
