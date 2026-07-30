@@ -2,7 +2,7 @@ INCLUDEPATH = src/includes
 GCCFLAGS = -Wall -Wextra -Werror -I$(INCLUDEPATH)
 
 ruffman: bin/main.o bin/ruffman.o bin/operations.o bin/utils.o
-	gcc -o $@ $^
+	gcc $^ -o $@ 
 
 bin/main.o: src/main.c
 	gcc $(GCCFLAGS) -c $< -o $@
