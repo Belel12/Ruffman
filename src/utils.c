@@ -92,6 +92,7 @@ long bytes_til_EOF(FILE* file){
 
 //retorna 1 caso o arquivo exista
 int arquivo_existe(const char* path){
+    if(!path) return 0;
     FILE* f = fopen(path,"r");
     int existe = (f == NULL)? 0 : 1;
     fclose(f);
@@ -154,7 +155,9 @@ char* join_file_to_path(char* file_name, char* path){
         (strlen(file_name)+strlen(path)+1) * sizeof(char)
     );
 
-    char* last_character = &path[strlen(path)-1];
+    strcpy(joined_string,path);
+    
+    char* last_character = &joined_string[strlen(path)-1];
     if(*last_character == get_os_path_separator()){
         last_character++;
         strcpy(last_character,file_name);
