@@ -92,6 +92,7 @@ int main(int argc, char* argv[]){
     //valida se existe um arquivo no path de saída dado
     if(!is_directory(output_path)){
         puts(RED "ERRO: CAMINHO DE SAÍDA NÃO É UM DIRETÓRIO VÁLIDO");
+        puts(output_path);
         free(operacao);
         return 1;
     }
