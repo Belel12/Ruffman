@@ -13,4 +13,7 @@ cp bin/ruffman ~/.local/bin/ && \
 # cria o arquivo de desinstalação
 printf "rm -f ~/.local/bin/ruffman\n\
 rm -f ./bin/*\n\
-rm -f ./uninstall_linux.sh\n" > ./uninstall_linux.sh
+rm -f ./uninstall_linux.sh\n" > ./uninstall_linux.sh &&\
+
+#Da permissão de execução do uninstall_linux
+chmod +x ./uninstall_linux.sh
