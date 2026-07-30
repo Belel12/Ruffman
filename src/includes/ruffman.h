@@ -7,7 +7,7 @@ typedef struct ruffman_vector Ruff_Vector;
 typedef struct bytes_compactados BytesCompactados;
 
 //A função já retorna o vetor heapfyzado, heapzado, heapado, hypado, sla
-Ruff_Vector* string_to_heap(const char* string);
+Ruff_Vector* bytes_to_heap(const unsigned char* string, long size);
 
 void destroy_RuffVector(Ruff_Vector* vetor);
 
@@ -37,11 +37,18 @@ void tree_to_binary(Ruff_Node* root, BytesCompactados* array[],char* path_atual)
 
 int write_compacted_data(
     BytesCompactados* bytes[], 
-    char* file_data, 
-    FILE* output_file
+    unsigned char* file_data, 
+    FILE* output_file,
+    unsigned long file_data_size
 );
 
-int uncompact_data(Ruff_Node* root, char* file_data, FILE* output_file);
+int uncompact_data(
+    Ruff_Node* root, 
+    char* file_data, 
+    FILE* output_file,
+    long file_data_size, 
+    long original_file_size
+);
 
 void free_RuffTree(Ruff_Node* root);
 

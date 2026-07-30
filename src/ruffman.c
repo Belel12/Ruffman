@@ -3,7 +3,6 @@
 #include <stdbool.h>
 #include <string.h>
 #include <ctype.h>
-#include <math.h>
 #include "ruffman.h"
 
 
@@ -24,7 +23,7 @@ struct ruffman_vector {
 
 struct bytes_compactados{
     unsigned int n_bits;
-    char* bytes;
+    unsigned char* bytes;
 };
 
 //Cria um novo nó com frequência 1
@@ -173,9 +172,8 @@ void heapify_RuffmanVector(Ruff_Vector* vetor){
 }
 
 
-
-Ruff_Vector* string_to_heap(const char* string){
-    if(string == NULL){
+Ruff_Vector* bytes_to_heap(const unsigned char* bytes, long size){
+    if(bytes == NULL){
         puts("ERRO AO GERAR HEAP: STRING NULL");
         return NULL;
     }
@@ -197,8 +195,8 @@ Ruff_Vector* string_to_heap(const char* string){
     }
 
     //conta a frequência de cada byte
-    for(unsigned long i = 0;i<strlen(string);i++){
-        frequencias[(int)string[i]]++;
+    for(long i = 0;i<size;i++){
+        frequencias[bytes[i]]++;
     }
 
     //para cada posição que n tiver frequência 0, 
@@ -406,16 +404,20 @@ BytesCompactados* tree_path_to_binary(char* tree_path){
 
     BytesCompactados* bc = new_BytesCompactados();
     size_t tamanho_string = strlen(tree_path);
-    int tamanho_vetor = (int) ceil((double)(tamanho_string/(sizeof(char)*8)));
+    int tamanho_vetor = (tamanho_string + 7) / 8;
 
-    char* bytes = (char*) calloc(tamanho_vetor,sizeof(char));
-    if(!bytes) return NULL;
+    unsigned char* bytes = (unsigned char*) calloc(tamanho_vetor,sizeof(char));
+    if(!bytes){
+        free_BytesCompactados(bc);
+        return NULL;
+    } 
 
     bc->bytes = bytes;
 
-    char* temp = bytes-1;
+    unsigned char* temp = bytes-1;
 
-    for(size_t i = 0; i < tamanho_string; i++,bc->n_bits++){
+    size_t i;
+    for(i = 0; i < tamanho_string; i++,bc->n_bits++){
         if(i % 8 == 0) temp++;
 
         *temp <<= 1;
@@ -429,6 +431,8 @@ BytesCompactados* tree_path_to_binary(char* tree_path){
             return NULL;
         }
     }
+
+    if(i % 8) *temp <<= 8-(i % 8);
 
     return bc;
     
@@ -471,7 +475,7 @@ void tree_to_binary(Ruff_Node* root, BytesCompactados* array[],char* path_atual)
             if(path_atual)
                 strcpy(path_direita,path_atual);
             strcpy(strrchr(path_direita,'\0'),"1");
-            tree_to_binary(root->esq,array,path_direita);
+            tree_to_binary(root->dir,array,path_direita);
         }
         //libera o caminho intermediario
         free(path_atual);
@@ -485,13 +489,14 @@ essa função escreve os bits que representam
 o caminho da raiz da árvore até o byte correspondente*/
 int write_compacted_data(
     BytesCompactados* bytes[], 
-    char* file_data, 
-    FILE* output_file
+    unsigned char* file_data, 
+    FILE* output_file,
+    unsigned long file_data_size
 ){
     if(!bytes || !file_data || !output_file) return 0;
 
     int bits_written_buffer = 0;
-    char buffer = '\0';
+    unsigned char buffer = '\0';
     unsigned char bits_filter[] = {
         0b10000000,
         0b01000000,
@@ -503,18 +508,17 @@ int write_compacted_data(
         0b00000001
     };
 
-    for(unsigned long i = 0; i < strlen(file_data);i++){
+    for(unsigned long i = 0; i < file_data_size;i++){
         
-
+        
         BytesCompactados* byte = bytes[(unsigned char)file_data[i]];
         if(!byte) return 0;
 
-        char* bits_ptr = byte->bytes;
+        unsigned char* bits_ptr = byte->bytes;
         int bits_written_ptr = 0;
         for(unsigned int j = 0; j < byte->n_bits; j++){
-            //TODO: consertar isso aqui, ta gravando os bits de forma erronea
             buffer <<= 1;
-            buffer |= ((*bits_ptr & bits_filter[bits_written_ptr]) >> (7-bits_written_ptr));
+            buffer |= (*bits_ptr & bits_filter[bits_written_ptr]) >> (7-bits_written_ptr);
             bits_written_buffer++;
             bits_written_ptr++;
             if(bits_written_buffer == 8){
@@ -528,11 +532,21 @@ int write_compacted_data(
             }
         }
     }
+    if(bits_written_buffer!=0){
+        buffer <<= 8 - bits_written_buffer;
+        fwrite(&buffer,sizeof(char),1,output_file);
+    }
     return 1;
 }
 
-int uncompact_data(Ruff_Node* root, char* file_data, FILE* output_file){
-    if(!root || !file_data) return 0;
+int uncompact_data(
+    Ruff_Node* root, 
+    char* file_data, 
+    FILE* output_file,
+    long file_data_size, 
+    long original_file_size
+){
+    if(!root || !file_data || !file_data_size) return 0;
 
     Ruff_Node* tmp = root;
     unsigned char bits_filter[] = {
@@ -546,11 +560,13 @@ int uncompact_data(Ruff_Node* root, char* file_data, FILE* output_file){
         0b00000001
     };
 
-    for(unsigned long i = 0; i < strlen(file_data);i++){
+    long rebuilt_bytes = 0;
+
+    for(long i = 0; i < file_data_size;i++){
         unsigned char byte_atual = file_data[i];
 
         for(int bits_lidos = 0; bits_lidos < 8; bits_lidos++){
-            int caminho = (byte_atual & bits_filter[bits_lidos]) >> (7-bits_lidos); //0b10000000
+            int caminho = (byte_atual & bits_filter[bits_lidos]); //0b10000000
 
             tmp = (caminho) ? tmp->dir : tmp->esq;
 
@@ -562,6 +578,11 @@ int uncompact_data(Ruff_Node* root, char* file_data, FILE* output_file){
             if(tmp->is_folha){
                 fwrite(&(tmp->byte),1,1,output_file);
                 tmp = root;
+                rebuilt_bytes++;
+            }
+            
+            if(rebuilt_bytes == original_file_size){
+                return 1;
             }
         }
     }
