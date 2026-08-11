@@ -6,7 +6,10 @@ Este projeto consiste em um programa compactador/descompactador de arquivos usan
 * Atualmente só está disponível o instalador para usuários linux, futuramente criarei um instalador para windows, porém é possível testar o no windows através do WSL
 
 ## Instalação
-Ao executar o arquivo `install_linux.sh`, o programa será compilado para a pasta bin e o executável será copiado para o path padrão do usuário local para que o comando possa ser executado de qualquer diretório dentro do terminal, e um arquivo de desinstalação `uninstall_linux.sh` executável será criado
+### Linux
+Ao executar o arquivo `install_linux.sh`, o programa será compilado para a pasta bin e o executável será copiado para o path padrão do usuário local para que o comando possa ser executado de qualquer diretório dentro do terminal, e um arquivo de desinstalação `uninstall_linux.sh` executável será criado.
+### Windows
+Ao executar o arquivo `install_windows.ps1`, o programa será compilado para a pasta bin e o caminho adicionado ao PATH do usuário, e um arquivo de desinstalação `uninstall_windows.ps1` executável será criado. No caso do instalador do windows, é provável que a execução de scripts esteja bloqueada pelo sistema por segurança. Você pode executar `powershell -ExecutionPolicy Bypass -File .\install_windows.ps1` para executar mesmo assim ou compile e adicione ao PATH manualmente conforme desejar.
 
 ## Como usar o programa
 Após a instalação, você pode verificar o uso do programa com o comando `ruffman help`.
