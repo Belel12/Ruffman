@@ -2,8 +2,7 @@
 Este projeto consiste em um programa compactador/descompactador de arquivos usando o algoritmo de Ruffman através de CLI via terminal
 
 ## Dependências prévias
-* O usuário deve o compilador GCC instalado e disponível no PATH para que o instalador compile o programa
-* Atualmente só está disponível o instalador para usuários linux, futuramente criarei um instalador para windows, porém é possível testar o no windows através do WSL
+* O usuário deve ter o compilador GCC instalado e disponível no PATH para que o instalador compile o programa
 
 ## Instalação
 ### Linux
